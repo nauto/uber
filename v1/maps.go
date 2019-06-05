@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/skratchdot/open-golang/open"
+	"github.com/garfieldchenyu/open-golang/open"
 )
 
 type Map struct {

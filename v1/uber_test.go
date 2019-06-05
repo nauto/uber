@@ -30,8 +30,8 @@ import (
 
 	"golang.org/x/oauth2"
 
-	uberOAuth2 "github.com/orijtech/uber/oauth2"
-	"github.com/orijtech/uber/v1"
+	uberOAuth2 "github.com/garfieldchenyu/uber/oauth2"
+	"github.com/garfieldchenyu/uber/v1"
 )
 
 var blankTrip = new(uber.Trip)

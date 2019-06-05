@@ -20,7 +20,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/orijtech/uber/v1"
+	"github.com/garfieldchenyu/uber/v1"
 )
 
 func Example_client_ListPaymentMethods() {

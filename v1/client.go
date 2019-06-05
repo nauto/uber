@@ -26,8 +26,8 @@ import (
 
 	"golang.org/x/oauth2"
 
+	uberOAuth2 "github.com/garfieldchenyu/uber/oauth2"
 	"github.com/orijtech/otils"
-	uberOAuth2 "github.com/orijtech/uber/oauth2"
 )
 
 const envUberTokenKey = "UBER_TOKEN_KEY"

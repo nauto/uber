@@ -22,9 +22,9 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/garfieldchenyu/uber/oauth2"
+	"github.com/garfieldchenyu/uber/v1"
 	"github.com/orijtech/authmid"
-	"github.com/orijtech/uber/oauth2"
-	"github.com/orijtech/uber/v1"
 )
 
 type Event struct {
