@@ -15,15 +15,13 @@
 package uber
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
-
-	"github.com/orijtech/otils"
 )
 
 type EnrollmentStatus string
@@ -53,7 +51,7 @@ type enrollmentsWrap struct {
 func (c *Client) Enrollments(query url.Values) ([]*Enrollment, error) {
 	// support email for now
 	path := "/safety/media/enrollments"
-	if email := query.Get("email"); email != nil && email != "" {
+	if email := query.Get("email"); email != "" {
 		path = strings.Join([]string{path, "?email=", strings.ToLower(email)}, "")
 	}
 	return c.enrollments(path, enrollmentV1API)
@@ -81,7 +79,7 @@ func (c *Client) EnrollmentByID(id string) (*Enrollment, error) {
 		return nil, errNilEnrollmentID
 	}
 	path := fmt.Sprintf("/safety/media/enrollments/%s", id)
-	return c.enrollment(path, enrollmentV1API)
+	return c.enrollmentByID(path, enrollmentV1API)
 }
 
 func (c *Client) enrollmentByID(path string, versions ...string) (*Enrollment, error) {
