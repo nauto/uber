@@ -36,7 +36,10 @@ const (
 
 const enrollmentV1API = "v1"
 
-var errNilEnrollmentID = errors.New("expecting a non-empty enrollment id")
+var (
+	errNilEnrollmentID     = errors.New("expecting a non-empty enrollment id")
+	errNilEnrollmentUpdate = errors.New("expecting a non-empty update map")
+)
 
 type Enrollment struct {
 	ID     string           `json:"id"`
@@ -100,13 +103,16 @@ func (c *Client) enrollmentByID(path string, versions ...string) (*Enrollment, e
 }
 
 type EnrollmentUpdate struct {
-	Status   string `json:"status,required"`
+	Status   string `json:"status" binding:"required"`
 	DeviceID string `json:"device_id,omitempty"`
 }
 
 func (c *Client) UpdateEnrollmentByID(id string, update *EnrollmentUpdate) (*Enrollment, error) {
 	if id == "" {
 		return nil, errNilEnrollmentID
+	}
+	if update == nil {
+		return nil, errNilEnrollmentUpdate
 	}
 	path := fmt.Sprintf("/safety/media/enrollments/%s", id)
 	return c.updateEnrollmentByID(path, update, enrollmentV1API)
