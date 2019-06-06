@@ -31,6 +31,7 @@ import (
 	"time"
 
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
 type OAuth2AppConfig struct {
@@ -250,6 +251,22 @@ func Authorize(oconfig *OAuth2AppConfig, scopes ...string) (*oauth2.Token, error
 
 	ctx := context.Background()
 	token, err := config.Exchange(ctx, code)
+	if err != nil {
+		return nil, err
+	}
+	return token, nil
+}
+
+func AuthorizeWithClientCredential(clientID, clientSecret string, scopes ...string) (*oauth2.Token, error) {
+	config := &clientcredentials.Config{
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		Scopes:       scopes,
+		TokenURL:     OAuth2TokenURL,
+	}
+
+	ctx := context.Background()
+	token, err := config.Token(ctx)
 	if err != nil {
 		return nil, err
 	}
