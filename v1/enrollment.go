@@ -16,12 +16,12 @@ package uber
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
-	"errors"
 
 	"github.com/orijtech/otils"
 )
@@ -102,39 +102,38 @@ func (c *Client) enrollmentByID(path string, versions ...string) (*Enrollment, e
 }
 
 type EnrollmentUpdate struct {
-	Status string `json:"status,required"`
+	Status   string `json:"status,required"`
 	DeviceID string `json:"device_id,omitempty"`
 }
 
-func (c *Client) UpdateEnrollmentByID(id string,  update *EnrollmentUpdate) (*Enrollment, error) {
+func (c *Client) UpdateEnrollmentByID(id string, update *EnrollmentUpdate) (*Enrollment, error) {
 	if id == "" {
-                return nil, errNilEnrollmentID
-        }
+		return nil, errNilEnrollmentID
+	}
 	path := fmt.Sprintf("/safety/media/enrollments/%s", id)
-        return updateEnrollmentByID((path, update, enrollmentV1API)
+	return c.updateEnrollmentByID(path, update, enrollmentV1API)
 }
 
-func (c *Client) updateEnrollmentByID(path string,  update *EnrollmentUpdate, versions ...string) (*Enrollment, error) {
-        blob, err := json.Marshal(update)
-        if err != nil {
-                return nil, err
-        }
- 	fullURL := fmt.Sprintf("%s%s", c.baseURL(versions...), path)
-        req, err := http.NewRequest("PATCH", fullURL, bytes.NewReader(blob))
-        if err != nil {
-                return nil, err
-        }
-        req.Header.Set("Content-Type", "application/json")
-        slurp, _, err := c.doReq(req)
-        if err != nil {
-                return nil, err
-        }
+func (c *Client) updateEnrollmentByID(path string, update *EnrollmentUpdate, versions ...string) (*Enrollment, error) {
+	blob, err := json.Marshal(update)
+	if err != nil {
+		return nil, err
+	}
+	fullURL := fmt.Sprintf("%s%s", c.baseURL(versions...), path)
+	req, err := http.NewRequest("PATCH", fullURL, bytes.NewReader(blob))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	slurp, _, err := c.doReq(req)
+	if err != nil {
+		return nil, err
+	}
 
-        value := new(Enrollment)
-        if err := json.Unmarshal(slurp, value); err != nil {
-                return nil, err
-        }
+	value := new(Enrollment)
+	if err := json.Unmarshal(slurp, value); err != nil {
+		return nil, err
+	}
 
-        return value, nil
+	return value, nil
 }
-
