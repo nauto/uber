@@ -21,8 +21,8 @@ import (
 
 	"golang.org/x/crypto/acme/autocert"
 
-	"github.com/garfieldchenyu/otils"
-	"github.com/garfieldchenyu/uber/uberhook"
+	"github.com/orijtech/otils"
+	"github.com/nauto/uber/uberhook"
 )
 
 func Example_Server() {

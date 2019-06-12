@@ -22,8 +22,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/garfieldchenyu/uber/oauth2"
-	"github.com/garfieldchenyu/uber/v1"
+	"github.com/nauto/uber/oauth2"
+	"github.com/nauto/uber/v1"
 	"github.com/orijtech/authmid"
 )
 
