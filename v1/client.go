@@ -26,7 +26,7 @@ import (
 
 	"golang.org/x/oauth2"
 
-	uberOAuth2 "github.com/garfieldchenyu/uber/oauth2"
+	uberOAuth2 "github.com/nauto/uber/oauth2"
 	"github.com/orijtech/otils"
 )
 

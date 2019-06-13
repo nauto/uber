@@ -29,3 +29,9 @@ _testmain.go
 
 # Binary directories
 bin/
+
+# vendor
+vendor/*
+
+# IDE
+.idea/*
