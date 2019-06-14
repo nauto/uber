@@ -42,9 +42,9 @@ var (
 )
 
 type Enrollment struct {
-	ID     string           `json:"id"`
-	Status EnrollmentStatus `json:"status"`
-	Device string           `json:"device,omitempty"`
+	ID       string           `json:"id"`
+	Status   EnrollmentStatus `json:"status"`
+	DeviceID string           `json:"deviceID,omitempty"`
 }
 
 type enrollmentsWrap struct {
@@ -105,6 +105,7 @@ func (c *Client) enrollmentByID(path string, versions ...string) (*Enrollment, e
 type EnrollmentUpdate struct {
 	Status   string `json:"status" binding:"required"`
 	DeviceID string `json:"device_id,omitempty"`
+	ClientID string `json:"client_id,omitempty"`
 }
 
 func (c *Client) UpdateEnrollmentByID(id string, update *EnrollmentUpdate) (*Enrollment, error) {
