@@ -28,8 +28,8 @@ const activityV1API = "v1"
 var errInvalidMinMaxTS = errors.New("invalid min/max timestamp")
 
 type Activity struct {
-	StartTS time.Time `json:"start_time"`
-	EndTS   time.Time `json:"end_time"`
+	StartTS time.Time `json:"startTime"`
+	EndTS   time.Time `json:"endTime"`
 }
 
 type activitiesWrap struct {
