@@ -40,7 +40,7 @@ func (c *Client) ActivitiesByID(id string, query url.Values) ([]*Activity, error
 	if id == "" {
 		return nil, errNilEnrollmentID
 	}
-	if query.Get("min") == "" || query.Get("max") == "" {
+	if query.Get("start_time") == "" || query.Get("end_time") == "" {
 		return nil, errInvalidMinMaxTS
 	}
 
