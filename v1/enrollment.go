@@ -28,7 +28,9 @@ type EnrollmentStatus string
 
 const (
 	Offered     EnrollmentStatus = "OFFERED"
+	Consented   EnrollmentStatus = "CONSENTED"
 	Purchased   EnrollmentStatus = "PURCHASED"
+	Scheduled   EnrollmentStatus = "SCHEDULED"
 	Enabled     EnrollmentStatus = "ENABLED"
 	Deactivated EnrollmentStatus = "DEACTIVATED"
 	Blocked     EnrollmentStatus = "BLOCKED"
@@ -42,9 +44,11 @@ var (
 )
 
 type Enrollment struct {
-	ID       string           `json:"id"`
-	Status   EnrollmentStatus `json:"status"`
-	DeviceID string           `json:"deviceID,omitempty"`
+	ID           string           `json:"id"`
+	Status       EnrollmentStatus `json:"status"`
+	DeviceID     string           `json:"device_id,omitempty"`
+	LicensePlate string           `json:"license_plate,omitempty"`
+	Vin          string           `json:"vin,omitempty"`
 }
 
 type enrollmentsWrap struct {
@@ -103,19 +107,21 @@ func (c *Client) enrollmentByID(path string, versions ...string) (*Enrollment, e
 }
 
 type EnrollmentUpdate struct {
-	Status   string `json:"status" binding:"required"`
-	DeviceID string `json:"device_id,omitempty"`
-	ClientID string `json:"client_id,omitempty"`
+	Status       string `json:"status" binding:"required"`
+	DeviceID     string `json:"device_id,omitempty"`
+	LicensePlate string `json:"license_plate,omitempty"`
+	Vin          string `json:"vin,omitempty"`
+	ClientID     string `json:"client_id" binding:"required"`
 }
 
-func (c *Client) UpdateEnrollmentByID(id string, update *EnrollmentUpdate) (*Enrollment, error) {
-	if id == "" {
+func (c *Client) UpdateEnrollmentByID(enrollmentID string, update *EnrollmentUpdate) (*Enrollment, error) {
+	if enrollmentID == "" {
 		return nil, errNilEnrollmentID
 	}
 	if update == nil {
 		return nil, errNilEnrollmentUpdate
 	}
-	path := fmt.Sprintf("/safety/media/enrollments/%s", id)
+	path := fmt.Sprintf("/safety/media/enrollments/%s", enrollmentID)
 	return c.updateEnrollmentByID(path, update, enrollmentV1API)
 }
 
