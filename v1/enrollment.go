@@ -107,11 +107,11 @@ func (c *Client) enrollmentByID(path string, versions ...string) (*Enrollment, e
 }
 
 type EnrollmentUpdate struct {
-	Status       string `json:"status" binding:"required"`
-	DeviceID     string `json:"device_id,omitempty"`
-	LicensePlate string `json:"license_plate,omitempty"`
-	Vin          string `json:"vin,omitempty"`
-	ClientID     string `json:"client_id" binding:"required"`
+	Status       EnrollmentStatus `json:"status" binding:"required"`
+	DeviceID     string           `json:"device_id,omitempty"`
+	LicensePlate string           `json:"license_plate,omitempty"`
+	Vin          string           `json:"vin,omitempty"`
+	ClientID     string           `json:"client_id" binding:"required"`
 }
 
 func (c *Client) UpdateEnrollmentByID(enrollmentID string, update *EnrollmentUpdate) (*Enrollment, error) {
