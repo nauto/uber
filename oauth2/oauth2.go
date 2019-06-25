@@ -197,6 +197,11 @@ const (
 	// authorizes Uber to share your trip times, fares,
 	// distances and cities with this partner.
 	ScopePartnerTrips = "partner.trips"
+
+	// ScopeMediaSafty is a privileged scope that
+	// authorizes Uber to share data related to driver
+	// enrollments
+	ScopeSaftyMedia = "safety.media"
 )
 
 func AuthorizeByEnvApp(scopes ...string) (*oauth2.Token, error) {
