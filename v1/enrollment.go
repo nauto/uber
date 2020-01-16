@@ -114,37 +114,37 @@ type EnrollmentUpdate struct {
 	ClientID     string           `json:"client_id" binding:"required"`
 }
 
-func (c *Client) UpdateEnrollmentByID(enrollmentID string, update *EnrollmentUpdate) (*Enrollment, error) {
+func (c *Client) UpdateEnrollmentByID(enrollmentID string, update *EnrollmentUpdate) (int, *Enrollment, error) {
 	if enrollmentID == "" {
-		return nil, errNilEnrollmentID
+		return http.StatusBadRequest, nil, errNilEnrollmentID
 	}
 	if update == nil {
-		return nil, errNilEnrollmentUpdate
+		return http.StatusBadRequest, nil, errNilEnrollmentUpdate
 	}
 	path := fmt.Sprintf("/safety/media/enrollments/%s", enrollmentID)
 	return c.updateEnrollmentByID(path, update, enrollmentV1API)
 }
 
-func (c *Client) updateEnrollmentByID(path string, update *EnrollmentUpdate, versions ...string) (*Enrollment, error) {
+func (c *Client) updateEnrollmentByID(path string, update *EnrollmentUpdate, versions ...string) (int, *Enrollment, error) {
 	blob, err := json.Marshal(update)
 	if err != nil {
-		return nil, err
+		return http.StatusBadRequest, nil, err
 	}
 	fullURL := fmt.Sprintf("%s%s", c.baseURL(versions...), path)
 	req, err := http.NewRequest("PATCH", fullURL, bytes.NewReader(blob))
 	if err != nil {
-		return nil, err
+		return req.Response.StatusCode, nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 	slurp, _, err := c.doReq(req)
 	if err != nil {
-		return nil, err
+		return req.Response.StatusCode, nil, err
 	}
 
 	value := new(Enrollment)
 	if err := json.Unmarshal(slurp, value); err != nil {
-		return nil, err
+		return req.Response.StatusCode, nil, err
 	}
 
-	return value, nil
+	return req.Response.StatusCode, value, nil
 }

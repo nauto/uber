@@ -193,6 +193,7 @@ func (c *Client) doHTTPReq(req *http.Request) ([]byte, http.Header, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	req.Response = res
 	if res.Body != nil {
 		defer res.Body.Close()
 	}
