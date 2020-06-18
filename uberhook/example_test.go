@@ -21,6 +21,7 @@ import (
 
 	"golang.org/x/crypto/acme/autocert"
 
+	"github.com/nauto/uber/uberhook"
 	"github.com/orijtech/otils"
 )
 

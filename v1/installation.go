@@ -1,3 +1,17 @@
+// Copyright 2017 orijtech. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package uber
 
 import (
@@ -6,16 +20,22 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 const (
 	path = "/v1/safety/media/installations"
 )
 
+var (
+	ErrInvalidInstallationID = errors.New("expecting non empty installation id")
+	ErrInvalidDeviceID       = errors.New("expecting non empty device id")
+)
+
 type CreateInstallation struct {
 	DeviceID     string `json:"device_id,binding:required"`
 	LicensePlate string `json:"license_plate,binding:required"`
-	Vin          string `json:"vin,binding:required"`
+	VIN          string `json:"vin,binding:required"`
 }
 
 type Installation struct {
@@ -43,6 +63,7 @@ func (c *Client) CreateInstallation(installation CreateInstallation) (int, *NewI
 	if err != nil {
 		return req.Response.StatusCode, nil, err
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 	resp, _, err := c.doReq(req)
 	if err != nil {
@@ -59,13 +80,15 @@ func (c *Client) CreateInstallation(installation CreateInstallation) (int, *NewI
 
 func (c *Client) DeleteInstallationByID(installationID string) (int, error) {
 	if installationID == "" {
-		return http.StatusBadRequest, errors.New("expecting non empty installation id")
+		return http.StatusBadRequest, ErrInvalidInstallationID
 	}
+
 	fullURL := fmt.Sprintf("%s/%s", path, installationID)
 	req, err := http.NewRequest("DELETE", fullURL, nil)
 	if err != nil {
 		return req.Response.StatusCode, err
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 	_, _, err = c.doReq(req)
 	if err != nil {
@@ -75,15 +98,18 @@ func (c *Client) DeleteInstallationByID(installationID string) (int, error) {
 	return req.Response.StatusCode, nil
 }
 
-func (c *Client) GetInstallationsByDeviceID(deviceID string) (int, *Installations, error) {
-	if deviceID == "" {
-		return http.StatusBadRequest, nil, errors.New("expecting non empty device id")
+func (c *Client) GetInstallations(query url.Values) (int, *Installations, error) {
+
+	if deviceID := query.Get("device_id"); deviceID == "" {
+		return http.StatusBadRequest, nil, ErrInvalidDeviceID
 	}
-	fullURL := fmt.Sprintf("%s?device_id=%s", path, deviceID)
+
+	fullURL := fmt.Sprintf("%s?%s", path, query.Encode())
 	req, err := http.NewRequest("GET", fullURL, nil)
 	if err != nil {
 		return req.Response.StatusCode, nil, err
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 	resp, _, err := c.doReq(req)
 	if err != nil {
