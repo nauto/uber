@@ -53,7 +53,7 @@ type Installations struct {
 	Offset        int             `json:"offset,omitempty"`
 }
 
-func (c *Client) CreateInstallation(installation CreateInstallation) (int, *NewInstallation, error) {
+func (c *Client) CreateInstallation(installation *CreateInstallation) (int, *NewInstallation, error) {
 	blob, err := json.Marshal(installation)
 	if err != nil {
 		return http.StatusBadRequest, nil, err
