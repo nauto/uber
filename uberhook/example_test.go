@@ -19,9 +19,9 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/orijtech/otils"
 	"golang.org/x/crypto/acme/autocert"
 
-	"github.com/orijtech/otils"
 	"github.com/nauto/uber/uberhook"
 )
 
