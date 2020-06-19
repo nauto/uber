@@ -99,11 +99,6 @@ func (c *Client) DeleteInstallationByID(installationID string) (int, error) {
 }
 
 func (c *Client) GetInstallations(query url.Values) (int, *Installations, error) {
-
-	if deviceID := query.Get("device_id"); deviceID == "" {
-		return http.StatusBadRequest, nil, ErrInvalidDeviceID
-	}
-
 	fullURL := fmt.Sprintf("%s?%s", path, query.Encode())
 	req, err := http.NewRequest("GET", fullURL, nil)
 	if err != nil {
