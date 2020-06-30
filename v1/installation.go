@@ -118,3 +118,28 @@ func (c *Client) GetInstallations(query url.Values) (int, *Installations, error)
 
 	return req.Response.StatusCode, installations, nil
 }
+
+func (c *Client) UpdateInstallationByID(installationID string, installation CreateInstallation) (int, error) {
+	if installationID == "" {
+		return http.StatusBadRequest, ErrInvalidInstallationID
+	}
+
+	blob, err := json.Marshal(installation)
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	fullURL := fmt.Sprintf("%s/%s", path, installationID)
+	req, err := http.NewRequest("PATCH", fullURL, bytes.NewReader(blob))
+	if err != nil {
+		return req.Response.StatusCode, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	_, _, err = c.doReq(req)
+	if err != nil {
+		return req.Response.StatusCode, err
+	}
+
+	return req.Response.StatusCode, nil
+}
