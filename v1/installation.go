@@ -24,7 +24,8 @@ import (
 )
 
 const (
-	path = "/v1/safety/media/installations"
+	path               = "/safety/media/installations"
+	installationsV1API = "v1"
 )
 
 var (
@@ -59,8 +60,12 @@ func (c *Client) CreateInstallation(installation *CreateInstallation) (int, *New
 		return http.StatusBadRequest, nil, err
 	}
 
-	req, err := http.NewRequest("POST", path, bytes.NewReader(blob))
+	fullURL := fmt.Sprintf("%s%s", c.baseURL(installationsV1API), path)
+	req, err := http.NewRequest("POST", fullURL, bytes.NewReader(blob))
 	if err != nil {
+		if req.Response == nil {
+			return http.StatusInternalServerError, nil, errors.New("response is nil")
+		}
 		return req.Response.StatusCode, nil, err
 	}
 
@@ -83,7 +88,7 @@ func (c *Client) DeleteInstallationByID(installationID string) (int, error) {
 		return http.StatusBadRequest, ErrInvalidInstallationID
 	}
 
-	fullURL := fmt.Sprintf("%s/%s", path, installationID)
+	fullURL := fmt.Sprintf("%s%s/%s", c.baseURL(installationsV1API), path, installationID)
 	req, err := http.NewRequest("DELETE", fullURL, nil)
 	if err != nil {
 		return req.Response.StatusCode, err
@@ -92,6 +97,9 @@ func (c *Client) DeleteInstallationByID(installationID string) (int, error) {
 	req.Header.Set("Content-Type", "application/json")
 	_, _, err = c.doReq(req)
 	if err != nil {
+		if req.Response == nil {
+			return http.StatusInternalServerError, errors.New("response is nil")
+		}
 		return req.Response.StatusCode, err
 	}
 
@@ -99,7 +107,7 @@ func (c *Client) DeleteInstallationByID(installationID string) (int, error) {
 }
 
 func (c *Client) GetInstallations(query url.Values) (int, *Installations, error) {
-	fullURL := fmt.Sprintf("%s?%s", path, query.Encode())
+	fullURL := fmt.Sprintf("%s%s?%s", c.baseURL(installationsV1API), path, query.Encode())
 	req, err := http.NewRequest("GET", fullURL, nil)
 	if err != nil {
 		return req.Response.StatusCode, nil, err
@@ -108,6 +116,9 @@ func (c *Client) GetInstallations(query url.Values) (int, *Installations, error)
 	req.Header.Set("Content-Type", "application/json")
 	resp, _, err := c.doReq(req)
 	if err != nil {
+		if req.Response == nil {
+			return http.StatusInternalServerError, nil, errors.New("response is nil")
+		}
 		return req.Response.StatusCode, nil, err
 	}
 
@@ -129,9 +140,12 @@ func (c *Client) UpdateInstallationByID(installationID string, installation Crea
 		return http.StatusBadRequest, err
 	}
 
-	fullURL := fmt.Sprintf("%s/%s", path, installationID)
+	fullURL := fmt.Sprintf("%s%s/%s", c.baseURL(installationsV1API), path, installationID)
 	req, err := http.NewRequest("PATCH", fullURL, bytes.NewReader(blob))
 	if err != nil {
+		if req.Response == nil {
+			return http.StatusInternalServerError, errors.New("response is nil")
+		}
 		return req.Response.StatusCode, err
 	}
 
