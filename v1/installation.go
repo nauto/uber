@@ -60,7 +60,7 @@ func (c *Client) CreateInstallation(installation *CreateInstallation) (int, *New
 		return http.StatusBadRequest, nil, err
 	}
 
-	fullURL := fmt.Sprintf("%s%s", c.baseURL([]string{installationsV1API}...), path)
+	fullURL := fmt.Sprintf("%s%s", c.baseURL(installationsV1API), path)
 	req, err := http.NewRequest("POST", fullURL, bytes.NewReader(blob))
 	if err != nil {
 		if req.Response == nil {
@@ -88,7 +88,7 @@ func (c *Client) DeleteInstallationByID(installationID string) (int, error) {
 		return http.StatusBadRequest, ErrInvalidInstallationID
 	}
 
-	fullURL := fmt.Sprintf("%s%s/%s", c.baseURL([]string{installationsV1API}...), path, installationID)
+	fullURL := fmt.Sprintf("%s%s/%s", c.baseURL(installationsV1API), path, installationID)
 	req, err := http.NewRequest("DELETE", fullURL, nil)
 	if err != nil {
 		return req.Response.StatusCode, err
@@ -107,7 +107,7 @@ func (c *Client) DeleteInstallationByID(installationID string) (int, error) {
 }
 
 func (c *Client) GetInstallations(query url.Values) (int, *Installations, error) {
-	fullURL := fmt.Sprintf("%s%s?%s", c.baseURL([]string{installationsV1API}...), path, query.Encode())
+	fullURL := fmt.Sprintf("%s%s?%s", c.baseURL(installationsV1API), path, query.Encode())
 	req, err := http.NewRequest("GET", fullURL, nil)
 	if err != nil {
 		return req.Response.StatusCode, nil, err
@@ -140,7 +140,7 @@ func (c *Client) UpdateInstallationByID(installationID string, installation Crea
 		return http.StatusBadRequest, err
 	}
 
-	fullURL := fmt.Sprintf("%s%s/%s", c.baseURL([]string{installationsV1API}...), path, installationID)
+	fullURL := fmt.Sprintf("%s%s/%s", c.baseURL(installationsV1API), path, installationID)
 	req, err := http.NewRequest("PATCH", fullURL, bytes.NewReader(blob))
 	if err != nil {
 		if req.Response == nil {
