@@ -55,6 +55,10 @@ type enrollmentsWrap struct {
 	Enrollments []*Enrollment `json:"enrollments"`
 }
 
+type enrollmentWrap struct {
+	Enrollment *Enrollment `json:"enrollment"`
+}
+
 func (c *Client) Enrollments(query url.Values) ([]*Enrollment, error) {
 	// support email for now
 	path := "/safety/media/enrollments"
@@ -99,11 +103,11 @@ func (c *Client) enrollmentByID(path string, versions ...string) (*Enrollment, e
 	if err != nil {
 		return nil, err
 	}
-	value := new(Enrollment)
+	value := new(enrollmentWrap)
 	if err := json.Unmarshal(slurp, value); err != nil {
 		return nil, err
 	}
-	return value, nil
+	return value.Enrollment, nil
 }
 
 type EnrollmentUpdate struct {
